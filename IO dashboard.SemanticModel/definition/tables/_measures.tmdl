@@ -1,0 +1,206 @@
+table _measures
+	lineageTag: 0c9537b1-c1ed-4edd-bce9-af45dc1eba3d
+
+	measure 'Percentage output' =
+			
+			DIVIDE(
+			    SUM('Fact_Output_Unpivot_2021-22'[Value]),
+			    CALCULATE(
+			        SUM('Fact_Output_Unpivot_2021-22'[Value]),
+			        ALLEXCEPT('Fact_Output_Unpivot_2021-22', 'Dim_Industry'[Industry])))
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 07f99d27-1ca2-4a3d-97a9-18ab644c6f6f
+
+	measure 'Percentage exports 21-22' =
+			DIVIDE(
+			    SUM('Fact_Output_2021-22'[Exports of Goods and Services]),
+			    SUM('Fact_Output_2021-22'[Total Supply])
+			)
+		formatString: 0%;-0%;0%
+		lineageTag: c24d827d-c4db-4794-a223-a47a8f68a9ba
+
+	measure 'Percentage industry uses 21-22' =
+			DIVIDE(
+			    SUM('Fact_Output_2021-22'[Total Industry Uses]),
+			    SUM('Fact_Output_2021-22'[Total Supply])
+			)
+		formatString: 0%;-0%;0%
+		lineageTag: 89f0869a-f4f5-422d-a6a8-d1fe1ab45bc1
+
+	measure 'Percentage final consumption (exc. exports) 21-22' =
+			DIVIDE(
+			    SUM('Fact_Output_2021-22'[Final Uses (Q1 to Q7)]) - SUM('Fact_Output_2021-22'[Exports of Goods and Services]),
+			    SUM('Fact_Output_2021-22'[Total Supply])
+			)
+		formatString: 0%;-0%;0%
+		lineageTag: e4bda2a5-9eb2-4953-ac5a-b1f31a4aba01
+
+	measure Title = SELECTEDVALUE('Dim_Industry'[Industry])
+		lineageTag: 8a8895ae-a8b8-4624-b33c-e5dbf77cafd2
+
+	measure 'Percentage exports 5yr change' =
+			
+			IF(ROUND(([Percentage exports 21-22]
+			     - [Percentage exports 16-17]) * 100,0) > 0,
+			CONCATENATE("+",
+			CONCATENATE(CONVERT(ROUND(
+			    (
+			     [Percentage exports 21-22]
+			     - [Percentage exports 16-17]) * 100, 0),
+			      STRING),
+			       "pp")),
+			CONCATENATE(CONVERT(ROUND(
+			    (
+			     [Percentage exports 21-22]
+			     - [Percentage exports 16-17]) * 100, 0),
+			      STRING),
+			       "pp"))
+		lineageTag: a39e86da-ed49-4254-b1e1-4618e4a53901
+
+	measure 'Percentage exports 16-17' =
+			DIVIDE(
+			    SUM('Fact_Output_2016-17'[Exports of Goods and Services]),
+			    SUM('Fact_Output_2016-17'[Total Supply])
+			)
+		lineageTag: 04c91a6b-00da-4dd0-a000-3474b7636dbb
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Percentage final consumption (exc. exports) 5yr change' =
+			
+			IF( ROUND(([Percentage final consumption (exc. exports) 21-22] - [Percentage final consumption (exc. exports) 16-17]) * 100, 0) > 0,
+			CONCATENATE("+",
+			CONCATENATE(
+			    CONVERT(
+			        ROUND(
+			([Percentage final consumption (exc. exports) 21-22] - [Percentage final consumption (exc. exports) 16-17])
+			    * 100,0), STRING), "pp")),
+			    CONCATENATE(
+			    CONVERT(
+			        ROUND(
+			([Percentage final consumption (exc. exports) 21-22] - [Percentage final consumption (exc. exports) 16-17])
+			    * 100,0), STRING), "pp"))
+		lineageTag: fd69475f-52ec-4ead-bfb2-4baacad76439
+
+	measure 'Percentage industry uses 5yr change' = ```
+			
+			IF(([Percentage industry uses 21-22] -
+			[Percentage industry uses 16-17]) > 0,
+			CONCATENATE("+",
+			CONCATENATE(CONVERT(
+			    ROUND(
+			([Percentage industry uses 21-22] -
+			[Percentage industry uses 16-17]) * 100
+			, 0) 
+			, STRING), "pp")),
+			CONCATENATE(CONVERT(
+			    ROUND(
+			([Percentage industry uses 21-22] -
+			[Percentage industry uses 16-17]) * 100
+			, 0) 
+			, STRING), "pp"))
+			```
+		lineageTag: 3bf70055-4468-4182-b0b6-fb70d8405260
+
+	measure 'Percentage industry uses 16-17' =
+			DIVIDE(
+			    SUM('Fact_Output_2016-17'[Total Industry Uses]),
+			    SUM('Fact_Output_2016-17'[Total Supply])
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 01ba565c-65fd-4c4c-a4ed-5957dd0b8158
+
+	measure 'Percentage final consumption (exc. exports) 16-17' =
+			DIVIDE(
+			    SUM('Fact_Output_2016-17'[Final Uses(Q1 to Q7)]) - SUM('Fact_Output_2016-17'[Exports of Goods and Services]),
+			    SUM('Fact_Output_2016-17'[Total Supply])
+			)
+		lineageTag: c1ffbff1-3c62-4a85-ae68-982b002e7ba3
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Import dependency 21-22' =
+			DIVIDE(
+			    SUM('Fact_Input_2021-22'[Imports]),
+			    SUM('Fact_Input_2021-22'[Australian Production]))
+		formatString: 0%;-0%;0%
+		lineageTag: ee2ff4cc-9fdc-4623-86f4-813cf141a0a4
+
+	measure 'Import dependency 16-17' =
+			DIVIDE(
+			    SUM('Fact Input_2016-17'[Imports]),
+			    SUM('Fact Input_2016-17'[Australian Production]))
+		formatString: 0
+		lineageTag: cd24945d-b610-42ab-81a6-db7baaab714c
+
+	measure 'Import dependency 5yr' =
+			
+			IF(ROUND(([Import dependency 21-22]
+			     - [Import dependency 16-17]) * 100,0) > 0,
+			CONCATENATE("+",
+			CONCATENATE(CONVERT(ROUND(
+			    (
+			     [Import dependency 21-22]
+			     - [Import dependency 16-17]) * 100, 0),
+			      STRING),
+			       "pp")),
+			CONCATENATE(CONVERT(ROUND(
+			    (
+			     [Import dependency 21-22]
+			     - [Import dependency 16-17]) * 100, 0),
+			      STRING),
+			       "pp"))
+		lineageTag: 811ef90b-be27-4ab7-83e9-97e148918de9
+
+	measure 'GVA 21-22' = SUM('Fact_Input_2021-22'[Value Added]) * 1000000
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 2a0228f4-4c6e-40e2-a54a-67ff7812b22e
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'GVA 16-17' = SUM('Fact Input_2016-17'[Value Added]) * 1000000
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 7f6eec6d-93ba-49df-bc23-41353cf712ae
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'GVA 5yr' =
+			
+			IF(ROUND(([GVA 21-22]
+			     - [GVA 16-17]),0) > 0,
+			CONCATENATE(CONCATENATE("+",
+			CONVERT(ROUND(
+			     DIVIDE(
+			        [GVA 21-22]
+			     - [GVA 16-17],
+			     [GVA 16-17]) *100 , 0),
+			      STRING)
+			       ), "%"),
+			CONCATENATE(CONVERT(ROUND(
+			      DIVIDE(
+			        [GVA 21-22]
+			     - [GVA 16-17],
+			     [GVA 16-17])*100, 0),
+			      STRING), "%"))
+		lineageTag: b7319fd9-12bb-4ff7-922d-4aea43d267e1
+
+	column _measures
+		dataType: string
+		lineageTag: edaf1905-3844-4f57-9481-02d13aea7aa8
+		summarizeBy: none
+		sourceColumn: _measures
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _measures = m
+		mode: import
+		source =
+				let
+				    Source = ""
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+

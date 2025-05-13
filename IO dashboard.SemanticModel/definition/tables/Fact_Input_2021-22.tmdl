@@ -1,0 +1,123 @@
+table Fact_Input_2021-22
+	lineageTag: e9a8b2df-b071-4aae-a5cb-99821a615e22
+
+	column 'Total Intermediate Use'
+		dataType: double
+		lineageTag: 599a70f2-dc38-4ad0-859a-dbde8c9bab71
+		summarizeBy: sum
+		sourceColumn: Total Intermediate Use
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Compensation of employees'
+		dataType: int64
+		formatString: 0
+		lineageTag: d212957f-412f-4e2f-b4b1-144a6314a31e
+		summarizeBy: sum
+		sourceColumn: Compensation of employees
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Gross operating surplus mixed income'
+		dataType: int64
+		formatString: 0
+		lineageTag: 3e7d45f3-a41a-4a36-b0c8-ed75562feec6
+		summarizeBy: sum
+		sourceColumn: Gross operating surplus mixed income
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Taxes less subsidies on products'
+		dataType: double
+		lineageTag: 2090fe63-df22-478e-a3e5-4697c2a33b7d
+		summarizeBy: sum
+		sourceColumn: Taxes less subsidies on products
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Other taxes less subsidies on production'
+		dataType: int64
+		formatString: 0
+		lineageTag: eadf63b3-fbe6-44db-9c15-8c2e6cc57f7a
+		summarizeBy: sum
+		sourceColumn: Other taxes less subsidies on production
+
+		annotation SummarizationSetBy = Automatic
+
+	column Imports
+		dataType: double
+		lineageTag: db9ff508-b0a2-447f-8e0b-a316dafd300c
+		summarizeBy: sum
+		sourceColumn: Imports
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Australian Production'
+		dataType: double
+		formatString: 0
+		lineageTag: d2754ecf-4f0b-4e66-8c8d-d9c9e0dca13f
+		summarizeBy: sum
+		sourceColumn: Australian Production
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Value Added'
+		dataType: double
+		formatString: 0
+		lineageTag: 91f5068d-2016-4f6b-a397-06a479a9bd5e
+		summarizeBy: sum
+		sourceColumn: Value Added
+
+		annotation SummarizationSetBy = Automatic
+
+	column Industry
+		dataType: string
+		lineageTag: 1d124995-0068-4cbc-9448-eb8b126b05f0
+		summarizeBy: none
+		sourceColumn: Industry
+
+		annotation SummarizationSetBy = Automatic
+
+	column Code
+		dataType: int64
+		formatString: 0
+		lineageTag: 850b09d2-09f2-451b-82c7-230907c6d38b
+		summarizeBy: none
+		sourceColumn: Code
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Fact_Input_2021-22 = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Mitch\Desktop\Input output\Table 5 21-22.xlsx"), null, true),
+				    #"Table 5_Sheet" = Source{[Item="Table 5",Kind="Sheet"]}[Data],
+				    #"Removed Top Rows" = Table.Skip(#"Table 5_Sheet",2),
+				    #"Filtered Rows3" = Table.SelectRows(#"Removed Top Rows", each [Column2] <> null),
+				    #"Filtered Rows4" = Table.SelectRows(#"Filtered Rows3", each [Column2] <> ""),
+				    #"Removed Columns" = Table.RemoveColumns(#"Filtered Rows4",{"Column118", "Column119", "Column120", "Column121", "Column122", "Column123", "Column124", "Column125", "Column126", "Column127", "Column128", "Column129", "Column130", "Column131", "Column132", "Column133", "Column134", "Column135", "Column136", "Column137", "Column138", "Column139", "Column140", "Column141", "Column142", "Column143", "Column144", "Column145", "Column146", "Column147", "Column148", "Column149", "Column150", "Column151", "Column152", "Column153", "Column154", "Column155", "Column156", "Column157", "Column158", "Column159", "Column160", "Column161", "Column162", "Column163", "Column164", "Column165", "Column166", "Column167", "Column168", "Column169", "Column170", "Column171", "Column172", "Column173", "Column174", "Column175", "Column176", "Column177", "Column178", "Column179", "Column180", "Column181", "Column182", "Column183", "Column184", "Column185", "Column186", "Column187", "Column188", "Column189", "Column190", "Column191", "Column192", "Column193", "Column194", "Column195", "Column196", "Column197", "Column198", "Column199", "Column200", "Column201", "Column202", "Column203", "Column204", "Column205", "Column206", "Column207", "Column208", "Column209", "Column210", "Column211", "Column212", "Column213", "Column214", "Column215", "Column216", "Column217", "Column218", "Column219", "Column220", "Column221", "Column222", "Column223", "Column224", "Column225", "Column226", "Column227", "Column228", "Column229", "Column230", "Column231", "Column232", "Column233", "Column234", "Column235", "Column236", "Column237", "Column238", "Column239", "Column240", "Column241", "Column242", "Column243", "Column244", "Column245", "Column246", "Column247", "Column248", "Column249", "Column250", "Column251", "Column252", "Column253", "Column254", "Column255", "Column256", "Column1"}),
+				    #"Transposed Table" = Table.Transpose(#"Removed Columns"),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Transposed Table", [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"TABLE 5. INDUSTRY BY INDUSTRY FLOW TABLE (DIRECT ALLOCATION OF IMPORTS)", type text}, {"Sheep, grains, beef and dairy cattle", type number}, {"Poultry and other livestock", type number}, {"Other agriculture", type number}, {"Aquaculture", type number}, {"Forestry and logging", type number}, {"Fishing, hunting and trapping", type number}, {"Agriculture, forestry and fishing support services", type number}, {"Coal mining", type number}, {"Oil and gas extraction", type number}, {"Iron ore mining", type number}, {"Non-ferrous metal ore mining", type number}, {"Non-metallic mineral mining", type number}, {"Exploration and mining support services", type number}, {"Meat and meat product manufacturing", type number}, {"Processed seafood manufacturing", type number}, {"Dairy product manufacturing", type number}, {"Fruit and vegetable product manufacturing", type number}, {"Oils and fats manufacturing", type number}, {"Grain mill and cereal product manufacturing", type number}, {"Bakery product manufacturing", type number}, {"Sugar and confectionery manufacturing", type number}, {"Other food product manufacturing", type number}, {"Soft drinks, cordials and syrup manufacturing", type number}, {"Beer manufacturing", type number}, {"Wine, spirits and tobacco", type number}, {"Textile manufacturing", type number}, {"Tanned leather, dressed fur and leather product manufacturing", type number}, {"Textile product manufacturing", type number}, {"Knitted product manufacturing", type number}, {"Clothing manufacturing", type number}, {"Footwear manufacturing", type number}, {"Sawmill product manufacturing", type number}, {"Other wood product manufacturing", type number}, {"Pulp, paper and paperboard manufacturing", type number}, {"Paper stationery and other converted paper product manufacturing", type number}, {"Printing (including the reproduction of recorded media)", type number}, {"Petroleum and coal product manufacturing", type number}, {"Human pharmaceutical and medicinal product manufacturing", type number}, {"Veterinary pharmaceutical and medicinal product manufacturing", type number}, {"Basic chemical manufacturing", type number}, {"Cleaning compounds and toiletry preparation manufacturing", type number}, {"Polymer product manufacturing", type number}, {"Natural rubber product manufacturing", type number}, {"Glass and glass product manufacturing", type number}, {"Ceramic product manufacturing", type number}, {"Cement, lime and ready-mixed concrete manufacturing", type number}, {"Plaster and concrete product manufacturing", type number}, {"Other non-metallic mineral product manufacturing", type number}, {"Iron and steel manufacturing", type number}, {"Basic non-ferrous metal manufacturing", type number}, {"Forged iron and steel product manufacturing", type number}, {"Structural metal product manufacturing", type number}, {"Metal containers and other sheet metal product manufacturing", type number}, {"Other fabricated metal product manufacturing", type number}, {"Motor vehicles and parts; other transport equipment manufacturing", type number}, {"Ships and boat manufacturing", type number}, {"Railway rolling stock manufacturing", type number}, {"Aircraft manufacturing", type number}, {"Professional, scientific, computer and electronic equipment manufacturing", type number}, {"Electrical equipment manufacturing", type number}, {"Domestic appliance manufacturing", type number}, {"Specialised and other machinery and equipment manufacturing", type number}, {"Furniture manufacturing", type number}, {"Other manufactured products", type number}, {"Electricity generation", type number}, {"Electricity transmission, distribution, on selling and electricity market operation", type number}, {"Gas supply", type number}, {"Water supply, sewerage and drainage services", type number}, {"Waste collection, treatment and disposal services", type number}, {"Residential building construction", type number}, {"Non-residential building construction", type number}, {"Heavy and civil engineering construction", type number}, {"Construction services", type number}, {"Wholesale trade", type number}, {"Retail trade", type number}, {"Accommodation", type number}, {"Food and beverage services", type number}, {"Road transport", type number}, {"Rail transport", type number}, {"Water, pipeline and other transport", type number}, {"Air and space transport", type number}, {"Postal and courier pick-up and delivery service", type number}, {"Transport support services and storage", type number}, {"Publishing (except internet and music publishing)", type number}, {"Motion picture and sound recording", type number}, {"Broadcasting (except internet)", type number}, {"Internet service providers, internet publishing and broadcasting, websearch portals and data processing", type number}, {"Telecommunication services", type number}, {"Library and other information services", type number}, {"Finance", type number}, {"Insurance and superannuation funds", type number}, {"Auxiliary finance and insurance services", type number}, {"Rental and hiring services (except real estate)", type number}, {"Imputed rent for owner-occupiers", Int64.Type}, {"Actual rent for housing", Int64.Type}, {"Non-residential property operators and real estate services", type number}, {"Professional, scientific and technical services", type number}, {"Computer systems design and related services", type number}, {"Employment, travel agency and other administrative services", type number}, {"Building cleaning, pest control and other support services", type number}, {"Public administration and regulatory services", type number}, {"Defence", type number}, {"Public order and safety", type number}, {"Primary and secondary education services (including pre-schools and special schools)", type number}, {"Technical, vocational and tertiary education services (including undergraduate and postgraduate)", type number}, {"Arts, sports, adult and other education services (including community education)", type number}, {"Health care services", type number}, {"Residential care and social assistance services", type number}, {"Heritage, creative and performing arts", type number}, {"Sports and recreation", type number}, {"Gambling", type number}, {"Automotive repair and maintenance", type number}, {"Other repair and maintenance", type number}, {"Personal services", type number}, {"Other services", type number}, {"Total Intermediate Use", type number}, {"Compensation of employees", Int64.Type}, {"Gross operating surplus mixed income", Int64.Type}, {"Taxes less subsidies on products", type number}, {"Other taxes less subsidies on production", Int64.Type}, {"Complementary imports", Int64.Type}, {"Competing imports", type number}, {"Australian Production", Int64.Type}, {"Value Added", Int64.Type}, {"Gross Domestic Product", type any}, {"© Commonwealth of Australia 2024", type any}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type",{{"TABLE 5. INDUSTRY BY INDUSTRY FLOW TABLE (DIRECT ALLOCATION OF IMPORTS)", "Industry"}}),
+				    #"Removed Columns1" = Table.RemoveColumns(#"Renamed Columns",{"© Commonwealth of Australia 2024","Complementary imports"}),
+				    #"Renamed Columns3" = Table.RenameColumns(#"Removed Columns1",{{"Competing imports", "Imports"}}),
+				    #"Removed Columns2" = Table.RemoveColumns(#"Renamed Columns3",{"Sheep, grains, beef and dairy cattle", "Poultry and other livestock", "Other agriculture", "Aquaculture", "Forestry and logging", "Fishing, hunting and trapping", "Agriculture, forestry and fishing support services", "Coal mining", "Oil and gas extraction", "Iron ore mining", "Non-ferrous metal ore mining", "Non-metallic mineral mining", "Exploration and mining support services", "Meat and meat product manufacturing", "Processed seafood manufacturing", "Dairy product manufacturing", "Fruit and vegetable product manufacturing", "Oils and fats manufacturing", "Grain mill and cereal product manufacturing", "Bakery product manufacturing", "Sugar and confectionery manufacturing", "Other food product manufacturing", "Soft drinks, cordials and syrup manufacturing", "Beer manufacturing", "Wine, spirits and tobacco", "Textile manufacturing", "Tanned leather, dressed fur and leather product manufacturing", "Textile product manufacturing", "Knitted product manufacturing", "Clothing manufacturing", "Footwear manufacturing", "Sawmill product manufacturing", "Other wood product manufacturing", "Pulp, paper and paperboard manufacturing", "Paper stationery and other converted paper product manufacturing", "Printing (including the reproduction of recorded media)", "Petroleum and coal product manufacturing", "Human pharmaceutical and medicinal product manufacturing", "Veterinary pharmaceutical and medicinal product manufacturing", "Basic chemical manufacturing", "Cleaning compounds and toiletry preparation manufacturing", "Polymer product manufacturing", "Natural rubber product manufacturing", "Glass and glass product manufacturing", "Ceramic product manufacturing", "Cement, lime and ready-mixed concrete manufacturing", "Plaster and concrete product manufacturing", "Other non-metallic mineral product manufacturing", "Iron and steel manufacturing", "Basic non-ferrous metal manufacturing", "Forged iron and steel product manufacturing", "Structural metal product manufacturing", "Metal containers and other sheet metal product manufacturing", "Other fabricated metal product manufacturing", "Motor vehicles and parts; other transport equipment manufacturing", "Ships and boat manufacturing", "Railway rolling stock manufacturing", "Aircraft manufacturing", "Professional, scientific, computer and electronic equipment manufacturing", "Electrical equipment manufacturing", "Domestic appliance manufacturing", "Specialised and other machinery and equipment manufacturing", "Furniture manufacturing", "Other manufactured products", "Electricity generation", "Electricity transmission, distribution, on selling and electricity market operation", "Gas supply", "Water supply, sewerage and drainage services", "Waste collection, treatment and disposal services", "Residential building construction", "Non-residential building construction", "Heavy and civil engineering construction", "Construction services", "Wholesale trade", "Retail trade", "Accommodation", "Food and beverage services", "Road transport", "Rail transport", "Water, pipeline and other transport", "Air and space transport", "Postal and courier pick-up and delivery service", "Transport support services and storage", "Publishing (except internet and music publishing)", "Motion picture and sound recording", "Broadcasting (except internet)", "Internet service providers, internet publishing and broadcasting, websearch portals and data processing", "Telecommunication services", "Library and other information services", "Finance", "Insurance and superannuation funds", "Auxiliary finance and insurance services", "Rental and hiring services (except real estate)", "Imputed rent for owner-occupiers", "Actual rent for housing", "Non-residential property operators and real estate services", "Professional, scientific and technical services", "Computer systems design and related services", "Employment, travel agency and other administrative services", "Building cleaning, pest control and other support services", "Public administration and regulatory services", "Defence", "Public order and safety", "Primary and secondary education services (including pre-schools and special schools)", "Technical, vocational and tertiary education services (including undergraduate and postgraduate)", "Arts, sports, adult and other education services (including community education)", "Health care services", "Residential care and social assistance services", "Heritage, creative and performing arts", "Sports and recreation", "Gambling", "Automotive repair and maintenance", "Other repair and maintenance", "Personal services", "Other services", "Gross Domestic Product"}),
+				    #"Capitalized Each Word" = Table.TransformColumns(#"Removed Columns2",{{"Industry", Text.Proper, type text}}),
+				    #"Merged Queries" = Table.NestedJoin(#"Capitalized Each Word", {"Industry"}, #"Code_Helper_2021-22", {"Industry"}, "Code_Helper_2021-22", JoinKind.LeftOuter),
+				    #"Expanded Code_Helper_2021-22" = Table.ExpandTableColumn(#"Merged Queries", "Code_Helper_2021-22", {"Code"}, {"Code"}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Expanded Code_Helper_2021-22",{{"Imports", type number}, {"Value Added", type number}, {"Code", Int64.Type}, {"Australian Production", type number}})
+				in
+				    #"Changed Type1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

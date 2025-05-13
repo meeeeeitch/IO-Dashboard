@@ -1,0 +1,144 @@
+table Fact_Output_2021-22
+	lineageTag: e28c0ad1-055b-4dbe-832b-0bec62c51c90
+
+	column Industry
+		dataType: string
+		lineageTag: 57e252d1-6d17-4f22-89eb-d88c679c5e30
+		summarizeBy: none
+		sourceColumn: Industry
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Total Industry Uses'
+		dataType: double
+		lineageTag: aab2599d-a141-4bc9-90c6-0a1985e33a65
+		summarizeBy: sum
+		sourceColumn: Total Industry Uses
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Households ; Final Consumption Expenditure'
+		dataType: double
+		lineageTag: d47c4736-1b39-4ee0-8e70-92b288cc6f28
+		summarizeBy: sum
+		sourceColumn: Households ; Final Consumption Expenditure
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'General Government ; Final Consumption Expenditure'
+		dataType: double
+		lineageTag: 3bd8c576-b233-4021-9697-903e795c9459
+		summarizeBy: sum
+		sourceColumn: General Government ; Final Consumption Expenditure
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Private ; Gross Fixed Capital Formation'
+		dataType: double
+		lineageTag: c5b44ff7-2a8c-4115-895f-f6e5cad4e630
+		summarizeBy: sum
+		sourceColumn: Private ; Gross Fixed Capital Formation
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Public Corporations ; Gross Fixed Capital Formation'
+		dataType: double
+		lineageTag: 9a5f513c-8f00-44a7-ae01-3d83902a0bf5
+		summarizeBy: sum
+		sourceColumn: Public Corporations ; Gross Fixed Capital Formation
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'General Government ; Gross Fixed Capital Formation'
+		dataType: double
+		lineageTag: 3049597a-f964-4065-8985-71ae3e966181
+		summarizeBy: sum
+		sourceColumn: General Government ; Gross Fixed Capital Formation
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Changes in Inventories'
+		dataType: double
+		lineageTag: d7744491-5e2b-416d-bab7-cb7cbcc6ca66
+		summarizeBy: sum
+		sourceColumn: Changes in Inventories
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Exports of Goods and Services'
+		dataType: double
+		lineageTag: 9e39c007-e40b-4ea0-961a-a7092d08be88
+		summarizeBy: sum
+		sourceColumn: Exports of Goods and Services
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Final Uses (Q1 to Q7)'
+		dataType: double
+		lineageTag: e8bae460-30a3-4c15-be68-019b222f10ea
+		summarizeBy: sum
+		sourceColumn: Final Uses (Q1 to Q7)
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Total Supply'
+		dataType: double
+		lineageTag: 8bc5e528-be97-4e4c-b305-f97eca892922
+		summarizeBy: sum
+		sourceColumn: Total Supply
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Code
+		dataType: int64
+		formatString: 0
+		lineageTag: 8aa25714-96ed-4b45-b0cf-71f74387e424
+		summarizeBy: none
+		sourceColumn: Code
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Fact_Output_2021-22 = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Mitch\Desktop\Input output\Table 5 21-22.xlsx"), null, true),
+				    #"Table 5_Sheet" = Source{[Item="Table 5",Kind="Sheet"]}[Data],
+				    #"Removed Top Rows" = Table.Skip(#"Table 5_Sheet",2),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Removed Top Rows", [PromoteAllScalars=true]),
+				    #"Renamed Columns" = Table.RenameColumns(#"Promoted Headers",{{"TABLE 5. INDUSTRY BY INDUSTRY FLOW TABLE (DIRECT ALLOCATION OF IMPORTS)", "Industry"}}),
+				    #"Removed Top Rows1" = Table.Skip(#"Renamed Columns",1),
+				    #"Filtered Rows" = Table.SelectRows(#"Removed Top Rows1", each [Industry] <> null),
+				    #"Removed Bottom Rows" = Table.RemoveLastN(#"Filtered Rows",16),
+				    #"Removed Columns" = Table.RemoveColumns(#"Removed Bottom Rows",{"Sheep, grains, beef and dairy cattle", "Poultry and other livestock", "Other agriculture", "Aquaculture", "Forestry and logging", "Fishing, hunting and trapping", "Agriculture, forestry and fishing support services", "Coal mining", "Oil and gas extraction", "Iron ore mining", "Non-ferrous metal ore mining", "Non-metallic mineral mining", "Exploration and mining support services", "Meat and meat product manufacturing", "Processed seafood manufacturing", "Dairy product manufacturing", "Fruit and vegetable product manufacturing", "Oils and fats manufacturing", "Grain mill and cereal product manufacturing", "Bakery product manufacturing", "Sugar and confectionery manufacturing", "Other food product manufacturing", "Soft drinks, cordials and syrup manufacturing", "Beer manufacturing", "Wine, spirits and tobacco", "Textile manufacturing", "Tanned leather, dressed fur and leather product manufacturing", "Textile product manufacturing", "Knitted product manufacturing", "Clothing manufacturing", "Footwear manufacturing", "Sawmill product manufacturing", "Other wood product manufacturing", "Pulp, paper and paperboard manufacturing", "Paper stationery and other converted paper product manufacturing", "Printing (including the reproduction of recorded media)", "Petroleum and coal product manufacturing", "Human pharmaceutical and medicinal product manufacturing", "Veterinary pharmaceutical and medicinal product manufacturing", "Basic chemical manufacturing", "Cleaning compounds and toiletry preparation manufacturing", "Polymer product manufacturing", "Natural rubber product manufacturing", "Glass and glass product manufacturing", "Ceramic product manufacturing", "Cement, lime and ready-mixed concrete manufacturing", "Plaster and concrete product manufacturing", "Other non-metallic mineral product manufacturing", "Iron and steel manufacturing", "Basic non-ferrous metal manufacturing", "Forged iron and steel product manufacturing", "Structural metal product manufacturing", "Metal containers and other sheet metal product manufacturing", "Other fabricated metal product manufacturing", "Motor vehicles and parts;#(lf) other transport equipment manufacturing", "Ships and boat manufacturing", "Railway rolling stock manufacturing", "Aircraft manufacturing", "Professional, scientific, computer and electronic equipment manufacturing", "Electrical equipment manufacturing", "Domestic appliance manufacturing", "Specialised and other machinery and equipment manufacturing", "Furniture manufacturing", "Other manufactured products", "Electricity generation", "Electricity transmission, distribution, on selling and electricity market operation", "Gas supply", "Water supply, sewerage and drainage services", "Waste collection, treatment and disposal services", "Residential building construction", "Non-residential building construction", "Heavy and civil engineering construction", "Construction services", "Wholesale trade", "Retail trade", "Accommodation", "Food and beverage services", "Road transport", "Rail transport", "Water, pipeline and other transport", "Air and space transport", "Postal and courier pick-up and delivery service", "Transport support services and storage", "Publishing (except internet and music publishing)", "Motion picture and sound recording", "Broadcasting (except internet)", "Internet service providers, internet publishing and broadcasting, websearch portals and data processing", "Telecommunication services", "Library and other information services", "Finance", "Insurance and superannuation funds", "Auxiliary finance and insurance services", "Rental and hiring services (except real estate)", "Imputed rent for owner-occupiers", "Actual rent for housing", "Non-residential property operators and real estate services", "Professional, scientific and technical services", "Computer systems design and related services", "Employment, travel agency and other administrative services", "Building cleaning, pest control and other support services", "Public administration and regulatory services", "Defence", "Public order and safety", "Primary and secondary education services (including pre-schools and special schools)", "Technical, vocational and tertiary education services (including undergraduate and postgraduate)", "Arts, sports, adult and other education services (including community education)", "Health care services", "Residential care and social assistance services", "Heritage, creative and performing arts", "Sports and recreation", "Gambling", "Automotive repair and maintenance", "Other repair and maintenance", "Personal services", "Other services", "Column128", "Column129", "Column130", "Column131", "Column132", "Column133", "Column134", "Column135", "Column136", "Column137", "Column138", "Column139", "Column140", "Column141", "Column142", "Column143", "Column144", "Column145", "Column146", "Column147", "Column148", "Column149", "Column150", "Column151", "Column152", "Column153", "Column154", "Column155", "Column156", "Column157", "Column158", "Column159", "Column160", "Column161", "Column162", "Column163", "Column164", "Column165", "Column166", "Column167", "Column168", "Column169", "Column170", "Column171", "Column172", "Column173", "Column174", "Column175", "Column176", "Column177", "Column178", "Column179", "Column180", "Column181", "Column182", "Column183", "Column184", "Column185", "Column186", "Column187", "Column188", "Column189", "Column190", "Column191", "Column192", "Column193", "Column194", "Column195", "Column196", "Column197", "Column198", "Column199", "Column200", "Column201", "Column202", "Column203", "Column204", "Column205", "Column206", "Column207", "Column208", "Column209", "Column210", "Column211", "Column212", "Column213", "Column214", "Column215", "Column216", "Column217", "Column218", "Column219", "Column220", "Column221", "Column222", "Column223", "Column224", "Column225", "Column226", "Column227", "Column228", "Column229", "Column230", "Column231", "Column232", "Column233", "Column234", "Column235", "Column236", "Column237", "Column238", "Column239", "Column240", "Column241", "Column242", "Column243", "Column244", "Column245", "Column246", "Column247", "Column248", "Column249", "Column250", "Column251", "Column252", "Column253", "Column254", "Column255", "Column256"}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Removed Columns",{{"Column1", Int64.Type}, {"Exports of Goods and Services", type number}, {"Total Supply", type number}, {"Final Uses #(lf)(Q1 to Q7)", type number}, {"Changes in Inventories", type number}, {"General Government ;#(lf) Gross Fixed Capital Formation", type number}, {"Total Industry Uses", type number}, {"Households ;#(lf) Final Consumption Expenditure", type number}, {"General Government ;#(lf) Final Consumption Expenditure", type number}, {"Private ;#(lf) Gross Fixed Capital Formation", type number}, {"Public Corporations ;#(lf) Gross Fixed Capital Formation", type number}}),
+				    #"Capitalized Each Word" = Table.TransformColumns(#"Changed Type",{{"Industry", Text.Proper, type text}}),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Capitalized Each Word",{{"Column1", "Code"}}),
+				    #"Changed Type2" = Table.TransformColumnTypes(#"Renamed Columns1",{{"Code", Int64.Type}})
+				in
+				    #"Changed Type2"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

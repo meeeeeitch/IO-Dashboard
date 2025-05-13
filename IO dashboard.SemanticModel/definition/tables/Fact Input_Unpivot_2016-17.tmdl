@@ -1,0 +1,68 @@
+table 'Fact Input_Unpivot_2016-17'
+	lineageTag: f01fdd36-3679-47ee-8cfc-e3bac5bfc24e
+
+	column Industry
+		dataType: string
+		lineageTag: 9c70bce0-e656-4acd-a828-ce51cc7e27af
+		summarizeBy: none
+		sourceColumn: Industry
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Industry input'
+		dataType: string
+		lineageTag: 72da5ffb-4d3f-46ec-8df7-eba8a881fb8e
+		summarizeBy: none
+		sourceColumn: Industry input
+
+		annotation SummarizationSetBy = Automatic
+
+	column Value
+		dataType: double
+		lineageTag: 6ce35996-ab33-42b4-964e-6d6b78db0ab9
+		summarizeBy: sum
+		sourceColumn: Value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Code
+		dataType: int64
+		formatString: 0
+		lineageTag: 0c195281-9a7e-437f-bf4f-ca345c046b18
+		summarizeBy: none
+		sourceColumn: Code
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Fact Input_Unpivot_2016-17' = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\Users\Mitch\Desktop\Input output\Table 5 16-17.xlsx"), null, true),
+				    #"Table 5_Sheet" = Source{[Item="Table 5",Kind="Sheet"]}[Data],
+				    #"Removed Top Rows" = Table.Skip(#"Table 5_Sheet",1),
+				    #"Filtered Rows4" = Table.SelectRows(#"Removed Top Rows", each [Column2] <> ""),
+				    #"Promoted Headers1" = Table.PromoteHeaders(#"Filtered Rows4", [PromoteAllScalars=true]),
+				    #"Renamed Columns3" = Table.RenameColumns(#"Promoted Headers1",{{"Column2", "Industry"}}),
+				    #"Demoted Headers" = Table.DemoteHeaders(#"Renamed Columns3"),
+				    #"Filtered Rows" = Table.SelectRows(#"Demoted Headers", each [Column2] <> null),
+				    #"Removed Columns" = Table.RemoveColumns(#"Filtered Rows",{"Column118", "Column119", "Column120", "Column121", "Column122", "Column123", "Column124", "Column125", "Column126", "Column127", "Column128", "Column129", "Column130", "Column131", "Column132", "Column133", "Column134", "Column135", "Column136", "Column137", "Column138", "Column139", "Column140", "Column141", "Column142", "Column143", "Column144", "Column145", "Column146", "Column147", "Column148", "Column149", "Column150", "Column151", "Column152", "Column153", "Column154", "Column155", "Column156", "Column157", "Column158", "Column159", "Column160", "Column161", "Column162", "Column163", "Column164", "Column165", "Column166", "Column167", "Column168", "Column169", "Column170", "Column171", "Column172", "Column173", "Column174", "Column175", "Column176", "Column177", "Column178", "Column179", "Column180", "Column181", "Column182", "Column183", "Column184", "Column185", "Column186", "Column187", "Column188", "Column189", "Column190", "Column191", "Column192", "Column193", "Column194", "Column195", "Column196", "Column197", "Column198", "Column199", "Column200", "Column201", "Column202", "Column203", "Column204", "Column205", "Column206", "Column207", "Column208", "Column209", "Column210", "Column211", "Column212", "Column213", "Column214", "Column215", "Column216", "Column217", "Column218", "Column219", "Column220", "Column221", "Column222", "Column223", "Column224", "Column225", "Column226", "Column227", "Column228", "Column229", "Column230", "Column231", "Column232", "Column233", "Column234", "Column235", "Column236", "Column237", "Column238", "Column239", "Column240", "Column241", "Column242", "Column243", "Column244", "Column245", "Column246", "Column247", "Column248", "Column249", "Column250", "Column251", "Column252", "Column253", "Column254", "Column255", "Column256", "Column1"}),
+				    #"Transposed Table" = Table.Transpose(#"Removed Columns"),
+				    #"Promoted Headers" = Table.PromoteHeaders(#"Transposed Table", [PromoteAllScalars=true]),
+				    #"Filtered Rows1" = Table.SelectRows(#"Promoted Headers", each [Industry] <> "Total Industry Uses"),
+				    #"Removed Columns1" = Table.RemoveColumns(#"Filtered Rows1",{"© Commonwealth of Australia 2019", "Gross Domestic Product", "Total Intermediate Use", "Australian Production", "Value Added"}),
+				    #"Unpivoted Columns" = Table.UnpivotOtherColumns(#"Removed Columns1", {"Industry"}, "Attribute", "Value"),
+				    #"Multiplied Column" = Table.TransformColumns(#"Unpivoted Columns", {{"Value", each _ * 1000000, type number}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Multiplied Column",{{"Attribute", "Industry input"}}),
+				    #"Capitalized Each Word" = Table.TransformColumns(#"Renamed Columns",{{"Industry", Text.Proper, type text}}),
+				    #"Merged Queries" = Table.NestedJoin(#"Capitalized Each Word", {"Industry"}, #"Code_Helper_2016-17", {"Industry"}, "Code_Helper_2016-17", JoinKind.LeftOuter),
+				    #"Expanded Code_Helper_2016-17" = Table.ExpandTableColumn(#"Merged Queries", "Code_Helper_2016-17", {"Code"}, {"Code"})
+				in
+				    #"Expanded Code_Helper_2016-17"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

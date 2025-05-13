@@ -1,0 +1,33 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-AU
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["Fact_Output_Unpivot_2021-22","Fact_Output_2021-22","Fact_Input_Unpivot_2021-22","_measures","Dim_Industry","Fact_Output_Unpivot_2016-17","Fact_Output_2016-17","Fact Input_Unpivot_2016-17","Code_Helper_2016-17","Code_Helper_2021-22","Fact_Input_2021-22","Fact Input_2016-17"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBIDesktopVersion = 2.142.1277.0 (25.04)+014fde450f93691fc9537f0758d73d1c5df153ef
+
+annotation PBI_RemovedChildren = [{"remoteItemId":{"foreignKeyRelationship":{"fromTableLocalLineageTag":"44eefc32-cd6b-4d76-8d39-1ecea401fa8c","fromColumnLocalLineageTag":"7e35c35b-3be3-4600-8b0e-64185b0b1ddc","toTableLocalLineageTag":"0f3bf1c3-6923-4051-9f9a-a9d4a55c2544","toColumnLocalLineageTag":"f095b45b-bd4c-4f8c-a470-f000e466565c"}},"objectType":"Relationship"}]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table Fact_Output_Unpivot_2021-22
+ref table Fact_Output_2021-22
+ref table Fact_Input_Unpivot_2021-22
+ref table _measures
+ref table Dim_Industry
+ref table Fact_Output_Unpivot_2016-17
+ref table Fact_Output_2016-17
+ref table 'Fact Input_Unpivot_2016-17'
+ref table Code_Helper_2016-17
+ref table Code_Helper_2021-22
+ref table Fact_Input_2021-22
+ref table 'Fact Input_2016-17'
+
+ref cultureInfo en-US
+

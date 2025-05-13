@@ -1,0 +1,36 @@
+relationship c7190e6f-fe44-4d31-0291-dee87d1cbbcf
+	fromColumn: Fact_Output_Unpivot_2021-22.Code
+	toColumn: Dim_Industry.Code
+
+relationship b9e99752-99cf-668a-f5c2-c98aea8c199e
+	fromColumn: Fact_Output_Unpivot_2016-17.Code
+	toColumn: Dim_Industry.Code
+
+relationship ce1a54da-9c3c-8237-884b-b78063f63dcc
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: Dim_Industry.Code
+	toColumn: Fact_Output_2021-22.Code
+
+relationship d6848b5a-d6a0-29cc-e257-5ccd928cb67f
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: Dim_Industry.Code
+	toColumn: Fact_Output_2016-17.Code
+
+relationship 9883b265-d2d3-5147-c001-1e42ae107239
+	fromColumn: 'Fact Input_Unpivot_2016-17'.Code
+	toColumn: Dim_Industry.Code
+
+relationship a715ced1-027e-759a-8474-0fa52e8df149
+	fromColumn: Fact_Input_Unpivot_2021-22.Code
+	toColumn: Dim_Industry.Code
+
+relationship f26131ab-710b-f99f-9047-c4ffd81d72b1
+	fromColumn: Fact_Input_2021-22.Code
+	toColumn: Dim_Industry.Code
+
+relationship 334213c6-a624-ce31-d0aa-797dc39b7ff1
+	fromColumn: 'Fact Input_2016-17'.Code
+	toColumn: Dim_Industry.Code
+
